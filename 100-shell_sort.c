@@ -1,54 +1,34 @@
 #include "sort.h"
 
 /**
- * power - calcul the power
- * @a: an integer
- * @b: an integer
- * Return: the number of a power b
+ * shell_sort - sorts an array of integers in ascending order using the
+ * Shell sort algorithm
+ * @array: array to sort
+ * @size: size of the array to sort
+ *
+ * Return: void
  */
-
-int power(int a, int b)
-{
-	int i, pow = 1;
-
-	for (i = 1; i <= b; i++)
-		pow = pow * a;
-	return (pow);
-}
-
-/**
- * shell_sort - that sorts an array of integers in ascending order
- * @array: an array of integers
- * @size: the length of array
- */
-
 void shell_sort(int *array, size_t size)
 {
-	int *gaps, tmp = 0, k;
-	size_t i, j, l;
+	size_t i, j, gap = 1;
+	int insert;
 
-
-	if (array == NULL)
+	if (array == NULL || size < 2)
 		return;
 
-	gaps = malloc(sizeof(int) * size);
+	while (gap < size / 3)
+		gap = gap * 3 + 1;
 
-	for (i = 1, l = size; i <= size; i++, l--)
-		gaps[i - 1] = (power(3, l) - 1) / 2;
-
-	i = 0;
-	while (gaps[i])
+	while (gap > 0)
 	{
-		for (j = gaps[i]; j < size; j++)
+		for (i = gap; i < size; i++)
 		{
-			tmp = array[j];
-			for (k = j; (k >= gaps[i]) && (array[k - gaps[i]] > tmp); k -= gaps[i])
-				array[k] = array[k - gaps[i]];
-			array[k] = tmp;
+			insert = array[i];
+			for (j = i; j >= gap && array[j - gap] > insert; j = j - gap)
+				array[j] = array[j - gap];
+			array[j] = insert;
 		}
-		if ((unsigned long int)gaps[i] < size)
-			print_array(array, size);
-		i++;
+		gap = (gap - 1) / 3;
+		print_array(array, size);
 	}
-	free(gaps);
 }
